@@ -11,9 +11,9 @@ class UpdateUserRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('update user', $this->route('user'));
     }
 
     /**
@@ -21,10 +21,13 @@ class UpdateUserRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' =>
+                'required|string|email|max:255|unique:users,email,' .
+                $this->route('user')->id,
         ];
     }
 }

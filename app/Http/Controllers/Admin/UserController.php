@@ -2,21 +2,38 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use App\Actions\Fortify\CreateNewUser;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\User;
+use Illuminate\Contracts\Support\Renderable;
+use App\Actions\Fortify\UpdateUserProfileInformation;
 
 class UserController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Create a new controller instance.
      */
-    public function index()
+    public function __construct()
     {
-        //
+        $this->authorizeResource(User::class, 'user');
+    }
+
+    /**
+ * Display a listing of the resource.
+ *
+ * @return Renderable
+ */
+    public function index(): Renderable
+    {
+        $users = User::paginate(10);
+
+        return view('admin.users.index', [
+            'users' => $users,
+        ]);
     }
 
     /**
@@ -24,20 +41,29 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): Renderable
     {
-        //
+        return view('admin.users.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreUserRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreUserRequest $request
+     * @param CreateNewUser $action
+     * @return RedirectResponse
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request, CreateNewUser $action): RedirectResponse
     {
-        //
+        $action->create([
+            ...$request->validated(),
+            'terms' => 'on',
+            'password_confirmation' => $request->password_confirmation,
+        ]);
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'User created successfully.');
     }
 
     /**
@@ -54,34 +80,45 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return Renderable
      */
-    public function edit(User $user)
+    public function edit(User $user): Renderable
     {
-        //
+        return view('admin.users.edit', [
+            'user' => $user,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateUserRequest  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param UpdateUserRequest $request
+     * @param User $user
+     * @param UpdateUserProfileInformation $action
+     * @return RedirectResponse
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(UpdateUserRequest $request, User $user, UpdateUserProfileInformation $action): RedirectResponse
     {
-        //
+        $action->update($user, $request->validated());
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'User updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
-        //
+        $user->delete();
+
+        return redirect()
+            ->route('admin.home.index')
+            ->with('success', 'User deleted successfully.');
     }
 }
