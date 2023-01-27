@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb378adcddac2b48e3fb4c6da120f3f5",
+    "content-hash": "9cef1ecc3f1ee639021f2f0c3f605ca1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -6243,6 +6243,58 @@
             "time": "2023-01-11T14:35:04+00:00"
         },
         {
+            "name": "maddhatter/laravel-view-generator",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/maddhatter/laravel-view-generator.git",
+                "reference": "e088b70fabbc95e0225ca2665f11ee8043cae747"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/maddhatter/laravel-view-generator/zipball/e088b70fabbc95e0225ca2665f11ee8043cae747",
+                "reference": "e088b70fabbc95e0225ca2665f11ee8043cae747",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": ">5.0",
+                "illuminate/filesystem": ">5.0",
+                "illuminate/support": ">5.0",
+                "illuminate/view": ">5.0",
+                "php": ">=5.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MaddHatter\\ViewGenerator\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MaddHatter\\ViewGenerator\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shawn Tunney",
+                    "email": "shawn.tunney@gmail.com"
+                }
+            ],
+            "description": "Tiny package to create a make:view command for Laravel 5+",
+            "support": {
+                "issues": "https://github.com/maddhatter/laravel-view-generator/issues",
+                "source": "https://github.com/maddhatter/laravel-view-generator/tree/v0.0.9"
+            },
+            "time": "2022-06-24T11:12:54+00:00"
+        },
+        {
             "name": "mockery/mockery",
             "version": "1.5.1",
             "source": {
@@ -8304,7 +8356,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "maddhatter/laravel-view-generator": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

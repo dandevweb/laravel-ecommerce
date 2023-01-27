@@ -4,3 +4,8 @@ Tutorial:
     https://flixtechs.co.zw/posts/laravel-ecommerce-tutorial-part-1-introduction
 
     https://flixtechs.co.zw/posts/laravel-ecommerce-tutorial-part-2-users-and-authorization
+
+
+Pacote para criação de views:
+    - composer require 'maddhatter/laravel-view-generator:dev-master' --dev
+        Como criar? php artisan make:view layouts.auth
