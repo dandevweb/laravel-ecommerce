@@ -10,6 +10,7 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "tonysm/stimulus-laravel": "^0.0.1",
         "tonysm/turbo-laravel": "^1.9"
     },
     "require-dev": {
