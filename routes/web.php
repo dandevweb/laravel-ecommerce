@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserRoleController;
 use App\Http\Controllers\Admin\RolePermissionController;
 use App\Http\Controllers\Admin\UserPermissionController;
@@ -45,6 +46,8 @@ Route::prefix('admin')
             '/roles/{role}/permissions',
             RolePermissionController::class,
         )->name('roles.permissions.assign');
+
+        Route::resource('categories', CategoryController::class);
 
 
 

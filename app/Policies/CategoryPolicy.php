@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
+use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Category;
 use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CategoryPolicy
 {
@@ -18,7 +18,7 @@ class CategoryPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->can('view all categories');
     }
 
     /**
@@ -30,7 +30,7 @@ class CategoryPolicy
      */
     public function view(User $user, Category $category)
     {
-        //
+        return $user->can('view category', $category);
     }
 
     /**
@@ -41,7 +41,7 @@ class CategoryPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->can('create category');
     }
 
     /**
@@ -53,7 +53,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category)
     {
-        //
+        return $user->can('update category', $category);
     }
 
     /**
@@ -65,7 +65,7 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category)
     {
-        //
+        return $user->can('delete category', $category);
     }
 
     /**
@@ -77,7 +77,7 @@ class CategoryPolicy
      */
     public function restore(User $user, Category $category)
     {
-        //
+        return $user->can('restore category', $category);
     }
 
     /**
@@ -89,6 +89,6 @@ class CategoryPolicy
      */
     public function forceDelete(User $user, Category $category)
     {
-        //
+        return $user->can('force delete category', $category);
     }
 }

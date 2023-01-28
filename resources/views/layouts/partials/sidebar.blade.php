@@ -24,6 +24,13 @@
                     <i class="fas fa-lock"></i> <span>Roles</span>
                 </a>
             </li>
+            <li class="menu-header">Products</li>
+            <li class="nav-item @if (Route::is('admin.categories.*')) active @endif">
+                <a href="{{ route('admin.categories.index') }}" class="nav-link">
+                    <i class="fas fa-folder"></i> <span>Categories</span>
+                </a>
+            </li>
+
 
         </ul>
     </aside>

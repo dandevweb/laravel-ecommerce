@@ -11,9 +11,9 @@ class StoreCategoryRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return false;
+        return $this->user()->can('create category');
     }
 
     /**
@@ -21,10 +21,12 @@ class StoreCategoryRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|unique:categories|max:255',
+            'description' => 'nullable|string',
+            'parent_id' => 'sometimes|nullable|integer|exists:categories,id',
         ];
     }
 }
