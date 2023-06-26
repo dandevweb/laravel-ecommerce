@@ -5,16 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Facades\File;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate();
+        $products = QueryBuilder::for(Product::class)
+            ->allowedFilters([AllowedFilter::scope('search', 'whereScout')])
+            ->paginate()
+            ->appends($request->query());
 
         return view('admin.products.index', [
             'products' => $products,
@@ -30,7 +36,14 @@ class ProductController extends Controller
 
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create($request->safe()->except(['images']));
+        $product = Product::create(
+            $request
+                ->safe()
+                ->collect()
+                ->filter(fn ($value) => !is_null($value))
+                ->except(['images'])
+                ->all(),
+        );
 
         collect($request->validated('images'))->each(function ($image) use (
             $product,
@@ -56,37 +69,47 @@ class ProductController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+
+        return view('admin.products.edit', [
+            'product' => $product,
+            'categories' => $categories
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateProductRequest  $request
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $product->update(
+            $request
+                ->safe()
+                ->collect()
+                ->filter(fn ($value) => !is_null($value))
+                ->except(['images'])
+                ->all(),
+        );
+
+        collect($request->validated('images'))->each(function ($image) use (
+            $product,
+        ) {
+            $product->attachMedia(new File(storage_path('app/' . $image)));
+            Storage::delete($image);
+        });
+
+        return to_route('admin.products.index')->with(
+            'success',
+            'Product was successfully updated',
+        );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+
+        return to_route('admin.products.index')->with(
+            'success',
+            'Product was successfully deleted',
+        );
     }
 }
